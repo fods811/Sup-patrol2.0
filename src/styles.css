@@ -1,17 +1,22 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-burgundy: #8b1a1a;
-  --color-burgundy-light: #a52222;
-  --color-sup-red: #cc3333;
-  --color-sup-blue: #1a6b8a;
-  --color-sup-dark: #1a1a2e;
-  --color-sup-gray: #2d2d2d;
+  --color-sup-blue: #017ece;
+  --color-sup-blue-dark: #015fa5;
+  --color-sup-blue-light: #b5dff5;
+  --color-sup-dark: #1a1a1a;
+  --color-sup-gray: #f5f5f5;
 }
 
+/* Анимации для модального окна и элементов */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideIn {
@@ -19,6 +24,7 @@
     opacity: 0;
     transform: translateY(-50px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -32,3 +38,76 @@
 .animate-slideIn {
   animation: slideIn 0.3s ease;
 }
+
+/* Анимации волны */
+@keyframes waveSwayFront {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-1.5%);
+  }
+}
+
+@keyframes waveSwayBack {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(1.5%);
+  }
+}
+
+@keyframes waveSwayDeep {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-2%);
+  }
+}
+
+.animate-wave-front {
+  animation: waveSwayFront 5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-wave-back {
+  animation: waveSwayBack 7s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-wave-deep {
+  animation: waveSwayDeep 9s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .animate-wave-front,
+  .animate-wave-back,
+  .animate-wave-deep {
+    animation: none;
+  }
+}
+
+.swiper {
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.tours-swiper .swiper-button-prev,
+.tours-swiper .swiper-button-next {
+  width: 50px !important;
+  height: 50px !important;
+}
+

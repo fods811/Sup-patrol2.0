@@ -5,46 +5,47 @@ import { Hero } from '../components/Hero'
 import { ToursCarousel } from '../components/ToursCarousel'
 import { Advantages } from '../components/Advantages'
 import { Footer } from '../components/Footer'
-import { FloatingButton } from '#/components/FloatingButton'
-import { Reviews } from '../components/Reviews'
-import { TourDetailsModal } from '#/components/ToursDetailsModal'
+import { PhotoGallery } from '../components/PhotoGallery'
+import { TourDetailsModal } from '../components/ToursDetailsModal'
+import { OrderModalProvider } from '../context/OrderModalContext'
+import { fetchTours, TOURS_QUERY_KEY } from '../hooks/useTours'
 import type { Tour } from '../data/tours'
 
 export const Route = createFileRoute('/')({
+  loader: ({ context }) =>
+    context.queryClient.ensureQueryData({
+      queryKey: TOURS_QUERY_KEY,
+      queryFn: fetchTours,
+    }),
   component: IndexComponent,
 })
 
 function IndexComponent() {
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isTourModalOpen, setIsTourModalOpen] = useState(false)
 
   const handleDetails = (tour: Tour) => {
     setSelectedTour(tour)
-    setIsModalOpen(true)
-  }
-
-  const handleOrder = (tour: Tour, comment: string) => {
-    // Отправка заявки в Telegram
-    const message = `НОВАЯ ЗАЯВКА!\nТур: ${tour.title}\nЦена: ${tour.price} руб.\nКомментарий: ${comment || 'нет'}`
-    const telegramLink = `https://t.me/snow_express?text=${encodeURIComponent(message)}`
-    window.open(telegramLink, '_blank')
+    setIsTourModalOpen(true)
   }
 
   return (
-    <div className="bg-white">
-      <Header />
-      <Hero />
-      <ToursCarousel onDetails={handleDetails} />
-      <Advantages />
-      <Reviews />
-      <TourDetailsModal
-        tour={selectedTour}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onOrder={handleOrder}
-      />
-      <Footer />
-      <FloatingButton />
-    </div>
+    <OrderModalProvider>
+      <div className="bg-sup-blue-light/30">
+        <Header />
+        <main>
+          <Hero />
+          <ToursCarousel onDetails={handleDetails} />
+          <Advantages />
+          <PhotoGallery />
+        </main>
+        <TourDetailsModal
+          tour={selectedTour}
+          isOpen={isTourModalOpen}
+          onClose={() => setIsTourModalOpen(false)}
+        />
+        <Footer />
+      </div>
+    </OrderModalProvider>
   )
 }
