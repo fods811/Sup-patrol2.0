@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import { formatPhoneInput, validatePhone } from '../lib/phone';
-import { openTelegramOrder } from '../lib/telegram';
+import { submitTelegramOrder } from '../lib/telegram';
 import { Button } from './ui/Button';
 import { FormField, TextInput } from './ui/FormField';
 import { Toast } from './ui/Toast';
@@ -65,18 +65,22 @@ export function OrderModal({ isOpen, onClose }: OrderModalProps) {
     setErrors({});
     setAgreeError(false);
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 400));
 
-    openTelegramOrder({ name, phone, details });
+    try {
+      await submitTelegramOrder({ name, phone, details });
+      setToast('✅ Заявка отправлена! Мы свяжемся с вами в ближайшее время.');
+      resetForm();
 
-    setIsLoading(false);
-    setToast('✅ Заявка отправлена! Мы свяжемся с вами в ближайшее время.');
-    resetForm();
-
-    setTimeout(() => {
-      setToast(null);
-      onClose();
-    }, 1500);
+      setTimeout(() => {
+        setToast(null);
+        onClose();
+      }, 1500);
+    } catch {
+      setToast('❌ Не удалось отправить заявку. Попробуйте позже или позвоните нам.');
+      setTimeout(() => setToast(null), 3000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
