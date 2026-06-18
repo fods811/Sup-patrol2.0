@@ -1,3 +1,6 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Sitemap: https://sup-patrol.ru/sitemap.xml
+Disallow: /api/
+Disallow: /admin/

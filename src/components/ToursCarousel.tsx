@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useRef, useEffect } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import {
   Navigation,
@@ -6,6 +7,7 @@ import {
   Keyboard,
   EffectCoverflow,
 } from 'swiper/modules'
+import type { Swiper as SwiperType } from 'swiper'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
@@ -94,8 +96,11 @@ function TourCard({
         <Button
           size="md"
           fullWidth
-          className="mt-2"
-          onClick={() => onDetails(tour)}
+          className="relative z-20 mt-2 swiper-no-swiping"
+          onClick={(e) => {
+            e.stopPropagation()
+            onDetails(tour)
+          }}
         >
           Подробнее
         </Button>
@@ -110,6 +115,58 @@ export function ToursCarousel({
   onDetails: (tour: Tour) => void
 }) {
   const { data: tours, isLoading, error } = useTours()
+  const swiperRef = useRef<SwiperType | null>(null)
+  const hasInteractedRef = useRef(false)
+
+  // Анимация подсказки скролла
+  useEffect(() => {
+    if (!swiperRef.current) return
+
+    let animationTimer: NodeJS.Timeout
+    let returnTimer: NodeJS.Timeout
+
+    const startAnimation = () => {
+      if (hasInteractedRef.current || !swiperRef.current) return
+
+      const swiper = swiperRef.current
+      const startTranslate = swiper.translate
+
+      // Делаем небольшой сдвиг влево
+      swiper.translateTo(startTranslate - 80, 500)
+
+      // Возвращаемся обратно через 600ms
+      returnTimer = setTimeout(() => {
+        if (swiperRef.current) {
+          swiperRef.current.translateTo(startTranslate, 500)
+        }
+      }, 600)
+    }
+
+    // Запускаем первую анимацию через 2 секунды
+    animationTimer = setTimeout(() => {
+      startAnimation()
+
+      // Повторяем каждые 5 секунд
+      const repeatTimer = setInterval(() => {
+        if (hasInteractedRef.current) {
+          clearInterval(repeatTimer)
+          return
+        }
+        startAnimation()
+      }, 5000)
+
+      return () => clearInterval(repeatTimer)
+    }, 2000)
+
+    return () => {
+      clearTimeout(animationTimer)
+      clearTimeout(returnTimer)
+    }
+  }, [])
+
+  const handleInteraction = () => {
+    hasInteractedRef.current = true
+  }
 
   if (isLoading) {
     return (
@@ -158,7 +215,15 @@ export function ToursCarousel({
           slideShadows: true,
         }}
         loop={true}
+        rewind
+        noSwipingClass="swiper-no-swiping"
+        preventClicks={false}
+        preventClicksPropagation={false}
         className="pb-12 tours-swiper"
+        onSwiper={(swiper) => {
+          swiperRef.current = swiper
+        }}
+        onTouchStart={handleInteraction}
       >
         {tours.map((tour) => (
           <SwiperSlide key={tour.id}>

@@ -1,7 +1,7 @@
 export const NAV_ITEMS = [
   { href: '#tours', label: 'Саптуры' },
   { href: '#advantages', label: 'О нас' },
-  { href: '#reviews', label: 'Отзывы' },
+  { href: '#gallery', label: 'Галерея' },
   { href: '#footer', label: 'Контакты' },
 ] as const
 

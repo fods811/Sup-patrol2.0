@@ -72,7 +72,7 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-white mb-4 border-l-3 border-sup-blue pl-3">
               Навигация
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2 mb-2">
               {FOOTER_NAV_ITEMS.map((item) => (
                 <li key={item.href}>
                   <NavLink href={item.href} variant="footer">

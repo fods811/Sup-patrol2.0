@@ -111,3 +111,34 @@
   height: 50px !important;
 }
 
+/* Coverflow: клики только на активном слайде, иначе соседние карточки перехватывают кнопку */
+.tours-swiper .swiper-slide {
+  pointer-events: none;
+}
+
+.tours-swiper .swiper-slide-active {
+  pointer-events: auto;
+}
+
+.tours-swiper .swiper-slide-shadow-left,
+.tours-swiper .swiper-slide-shadow-right,
+.tours-swiper .swiper-slide-shadow-coverflow {
+  pointer-events: none;
+}
+
+.tours-swiper .swiper-slide-active button {
+  position: relative;
+  z-index: 20;
+  transform: translateZ(2px);
+}
+
+.animate-scroll-hint {
+  animation: scrollHint 3s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-scroll-hint {
+    animation: none;
+  }
+}

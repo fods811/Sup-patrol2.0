@@ -1,0 +1,39 @@
+DirectoryIndex index.html
+
+RewriteEngine On
+
+# === 1. Принудительный HTTPS и удаление www ===
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\.sup-patrol\.ru [NC]
+RewriteRule ^(.*)$ https://sup-patrol.ru/$1 [R=301,L]
+
+# === 2. SEO РЕДИРЕКТЫ СО СТАРЫХ СТРАНИЦ ===
+
+# А. Универсальный редирект для всех старых .html страниц (DLE)
+# Если запрашивается файл .html, которого физически нет, кидаем на главную
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^.]+)\.html$ / [R=301,L]
+
+# Б. Редиректы для страниц без расширения (если такие были в меню)
+# Добавьте сюда конкретные пути из старого меню, если они были без .html
+RewriteRule ^tours/?$ / [R=301,L]
+RewriteRule ^about/?$ / [R=301,L]
+RewriteRule ^contacts/?$ / [R=301,L]
+
+# === 3. Поддержка SPA (TanStack Start) ===
+# Если файл или папка не найдены, отдаем index.html для работы React Router
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+
+# === 4. Кэширование статики ===
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
