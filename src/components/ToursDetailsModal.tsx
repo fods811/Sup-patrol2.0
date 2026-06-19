@@ -3,7 +3,6 @@ import type { Tour } from '../data/tours'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import { formatPhoneInput, validatePhone } from '../lib/phone'
 import { sanitizeHtml } from '../lib/sanitize'
-import { submitTelegramOrder } from '../lib/telegram'
 import { Button } from './ui/Button'
 import { Toast } from './ui/Toast'
 
@@ -55,27 +54,19 @@ export function TourDetailsModal({
     setAgreeError(false)
 
     setIsLoading(true)
+    await new Promise((resolve) => setTimeout(resolve, 800))
 
-    try {
-      await submitTelegramOrder({
-        name,
-        phone,
-        date: date || undefined,
-        tourTitle: tour.title,
-        tourPrice: tour.price,
-      })
-      setToast('✅ Заявка отправлена! Мы свяжемся с вами в ближайшее время.')
+    const message = `🛶 НОВАЯ ЗАЯВКА!\n\n🏄 Тур: ${tour.title}\n💰 Цена: ${tour.price} руб.\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n📅 Дата: ${date || 'не указана'}`
+    const telegramLink = `https://t.me/snow_express?text=${encodeURIComponent(message)}`
+    window.open(telegramLink, '_blank')
 
-      setTimeout(() => {
-        setToast(null)
-        onClose()
-      }, 1500)
-    } catch {
-      setToast('❌ Не удалось отправить заявку. Попробуйте позже или позвоните нам.')
-      setTimeout(() => setToast(null), 3000)
-    } finally {
-      setIsLoading(false)
-    }
+    setIsLoading(false)
+    setToast('✅ Заявка отправлена! Мы свяжемся с вами в ближайшее время.')
+
+    setTimeout(() => {
+      setToast(null)
+      onClose()
+    }, 1500)
   }
 
   return (
