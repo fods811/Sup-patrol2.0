@@ -3,8 +3,7 @@ import { NavLink } from './ui/NavLink'
 
 const SOCIAL_LINKS = [
   { href: 'https://t.me/snow_express', icon: '📱', label: 'Telegram' },
-  { href: 'https://vk.com/suppatrol', icon: '📘', label: 'VK' },
-  { href: 'https://instagram.com/suppatrol', icon: '📸', label: 'Instagram' },
+  { href: 'https://vk.com/snowexpress', icon: '📘', label: 'VK',  },
 ] as const
 
 export function Footer() {
@@ -54,16 +53,6 @@ export function Footer() {
                 <span className="text-white">
                   г. Санкт-Петербург, Пр. Энгельса д.111
                 </span>
-              </p>
-              <p>
-                <span className="text-gray-400">Email:</span>
-                <br />
-                <a
-                  href="mailto:info@sup-patrol.ru"
-                  className="text-white hover:text-sup-blue transition-colors"
-                >
-                  info@sup-patrol.ru
-                </a>
               </p>
             </div>
           </div>
@@ -125,7 +114,7 @@ export function Footer() {
 
         <div className="border-t border-gray-800 pt-6 text-center">
           <p className="text-gray-500 text-xs">
-            © 2020-2025 sup-patrol.ru — SUP туры в Санкт-Петербурге. Все права
+            © 2020-2026 sup-patrol.ru — SUP туры в Санкт-Петербурге. Все права
             защищены.
           </p>
         </div>

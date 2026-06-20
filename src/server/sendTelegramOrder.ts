@@ -1,44 +1,39 @@
 import { createServerFn } from '@tanstack/react-start'
-import { buildOrderMessage, type OrderPayload } from '../lib/telegram'
-import { getTelegramConfig } from './env'
+import type { OrderPayload } from '../lib/telegram'
 
+const TELEGRAM_PROXY_URL = 'https://telegram-script-nine.vercel.app/api/patrol'
 const TELEGRAM_TIMEOUT_MS = 15_000
 
 export const sendTelegramOrder = createServerFn({ method: 'POST' })
   .inputValidator((data: OrderPayload) => data)
   .handler(async ({ data }) => {
-    const { token, chatId, apiBase } = getTelegramConfig()
-
-    if (!token || !chatId) {
-      throw new Error('Telegram credentials not configured')
-    }
-
-    const message = buildOrderMessage(data)
-
     let response: Response
     try {
-      response = await fetch(`${apiBase}/bot${token}/sendMessage`, {
+      response = await fetch(TELEGRAM_PROXY_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Origin': 'https://sup-patrol.ru'
+        },
         body: JSON.stringify({
-          chat_id: chatId,
-          text: message,
+          name: data.name,
+          phone: data.phone,
+          tourTitle: data.tourTitle,
+          tourPrice: data.tourPrice,
+          date: data.date,
+          details: data.details,
         }),
         signal: AbortSignal.timeout(TELEGRAM_TIMEOUT_MS),
       })
     } catch (error) {
-      console.error('Telegram network error:', error)
-      throw new Error('Не удалось связаться с Telegram API')
+      console.error('Telegram proxy network error:', error)
+      throw new Error('Не удалось связаться с сервером отправки заявок')
     }
 
-    const result = (await response.json()) as {
-      ok: boolean
-      description?: string
-    }
-
-    if (!response.ok || !result.ok) {
-      console.error('Telegram API error:', result)
-      throw new Error(result.description ?? 'Failed to send Telegram message')
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}))
+      console.error('Telegram proxy error:', error)
+      throw new Error(error.error || 'Failed to send order')
     }
 
     return { success: true }

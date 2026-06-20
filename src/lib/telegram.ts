@@ -1,5 +1,4 @@
-import { sendTelegramOrder } from '../server/sendTelegramOrder'
-
+const VERCEL_API_URL = 'https://telegram-script-nine.vercel.app/api/patrol'
 export interface OrderPayload {
   name: string
   phone: string
@@ -38,5 +37,15 @@ export function buildOrderMessage({
 }
 
 export async function submitTelegramOrder(payload: OrderPayload): Promise<void> {
-  await sendTelegramOrder({ data: payload })
+  const response = await fetch(VERCEL_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to send order')
+  }
 }

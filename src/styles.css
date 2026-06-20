@@ -8,7 +8,6 @@
   --color-sup-gray: #f5f5f5;
 }
 
-/* Анимации для модального окна и элементов */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -111,7 +110,7 @@
   height: 50px !important;
 }
 
-/* Coverflow: клики только на активном слайде, иначе соседние карточки перехватывают кнопку */
+
 .tours-swiper .swiper-slide {
   pointer-events: none;
 }

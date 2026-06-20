@@ -8,12 +8,17 @@ import 'swiper/css/pagination'
 import { LazyImage } from './ui/LazyImage'
 
 const PLACEHOLDER_PHOTOS = [
-  'https://placehold.co/800x600/017ece/ffffff?text=Фото+1',
-  'https://placehold.co/800x600/015fa5/ffffff?text=Фото+2',
-  'https://placehold.co/800x600/b5dff5/017ece?text=Фото+3',
-  'https://placehold.co/800x600/1a1a1a/ffffff?text=Фото+4',
-  'https://placehold.co/800x600/f5f5f5/017ece?text=Фото+5',
-  'https://placehold.co/800x600/017ece/ffffff?text=Фото+6',
+  '/gallery/1.jpg',
+  '/gallery/2.jpg',
+  '/gallery/3.jpg',
+  '/gallery/4.jpg',
+  '/gallery/5.JPG',
+  '/gallery/6.JPG',
+  '/gallery/7.JPG',
+  '/gallery/8.JPG',
+  '/gallery/9.jpg',
+  '/gallery/10.jpg',
+  '/gallery/11.jpg',
 ]
 
 export function PhotoGallery() {
